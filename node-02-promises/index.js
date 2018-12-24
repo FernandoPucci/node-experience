@@ -18,74 +18,47 @@ function obterUsuario() {
     })
 };
 
-function obterTelefone(idUsuario, callback) {
-    setTimeout(function () {
-        return callback(null, {
-            id: 24525,
-            ddd: '16',
-            numero: '39112154'
-        })
-    }, 1000);
-
+function obterTelefone(idUsuario) {
+    return new Promise(function resolvePromise(resolv, reject) {
+        setTimeout(function () {
+            return resolv({
+                id: 24525,
+                ddd: '16',
+                numero: '39112154'
+            })
+        }, 1000);
+    });
 }
 
-function obterEndereco(idUsuario, callback) {
-    setTimeout(function () {
-        return callback(null, {
-            logradouro: 'Rua XPTO',
-            numero: '35',
-            complemento: 'apartamento',
-            cidade: 'São Paulo',
-            estado: 'SP'
-        })
-    }, 1000)
+function obterEndereco(idUsuario) {
+    return new Promise(function resolvePromise(resolv, reject) {
+        setTimeout(function () {
+            return resolv(null, {
+                logradouro: 'Rua XPTO',
+                numero: '35',
+                complemento: 'apartamento',
+                cidade: 'São Paulo',
+                estado: 'SP'
+            })
+        }, 1000)
+    });
 }
-
-//CALLBACK (erro,sucesso)
-
 
 //carrega usuario
 const usuarioPromise = obterUsuario();
 
 // para manipular o sucesso usamos a função .then
 usuarioPromise
-    .then(function (resultado) {
-
-        console.log("Resultado:", resultado);
-
+    .then(function (usuario) {
+        console.log("Resultado:", usuario);
+        return usuario;
+    })
+    .then(function (usuario) {
+        return obterTelefone(usuario.id);
+    })
+    .then(function (usuario) {
+        return obterEndereco((usuario.id));
     })
     .catch(function erro(error) {
         console.erro("HOUVE UM ERRO! ", error);
     });
-
-// para manipulasr o erro, usamos o  .catch
-
-// const usuario = obterUsuario(function resolverUsuario(error, usuario) {
-//     //null || "" || false === 0 
-//     if (error) {
-//         console.error("DEU ZEBRA! ERRO AO OBTER USUÁRIO", error);
-//         return;
-//     }
-
-//     obterTelefone(usuario.id, function resolverTelefone(erroTelefone, telefone) {
-
-//         if (erroTelefone) {
-//             console.error("DEU ZEBRA! ERRO AO OBTER TELEFONE", erroTelefone);
-//             return;
-//         }
-
-//         obterEndereco(usuario.id, function resolverEndereco(erroEndereco, endereco) {
-//             if (erroEndereco) {
-//                 console.error("DEU ZEBRA! ERRO AO OBTER ENDEREÇO", erroTelefone);
-//                 return;
-//             }
-
-//             console.log(`USUARIO: 
-//             Id: ${usuario.id}
-//             Nome: ${usuario.nome}
-//             Telefone: ${telefone.ddd} ${telefone.numero}
-//             Endereço: ${endereco.logradouro}, ${endereco.numero} ${endereco.complemento}, ${endereco.cidade}/${endereco.estado}
-//     `)
-//         });
-//     });
-// });
