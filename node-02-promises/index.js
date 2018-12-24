@@ -2,15 +2,21 @@
 // 1- obter numero de telefone de usuario a partir do id
 // 2- obter o endereco do usuario
 
-function obterUsuario(callback) {
-    setTimeout(function () {
-        return callback(null, {
-            id: 31731,
-            name: 'Zé da silva',
-            birthDate: new Date(1985, 12, 25)
-        })
-    }, 500);
-}
+// IMPLEMENTAÇÃO POR PROMISES
+
+function obterUsuario() {
+    // Quando houver problema - reject(erro)
+    // Quando sucesso - resolve  
+    return new Promise(function resolvePromise(resolve, reject) {
+        setTimeout(function () {
+            return resolve({
+                id: 31731,
+                name: 'Zé da silva',
+                birthDate: new Date(1985, 12, 25)
+            })
+        }, 500);
+    })
+};
 
 function obterTelefone(idUsuario, callback) {
     setTimeout(function () {
@@ -39,32 +45,47 @@ function obterEndereco(idUsuario, callback) {
 
 
 //carrega usuario
-const usuario = obterUsuario(function resolverUsuario(error, usuario) {
-    //null || "" || false === 0 
-    if (error) {
-        console.error("DEU ZEBRA! ERRO AO OBTER USUÁRIO", error);
-        return;
-    }
+const usuarioPromise = obterUsuario();
 
-    obterTelefone(usuario.id, function resolverTelefone(erroTelefone, telefone) {
+// para manipular o sucesso usamos a função .then
+usuarioPromise
+    .then(function (resultado) {
 
-        if (erroTelefone) {
-            console.error("DEU ZEBRA! ERRO AO OBTER TELEFONE", erroTelefone);
-            return;
-        }
+        console.log("Resultado:", resultado);
 
-        obterEndereco(usuario.id, function resolverEndereco(erroEndereco, endereco) {
-            if (erroEndereco) {
-                console.error("DEU ZEBRA! ERRO AO OBTER ENDEREÇO", erroTelefone);
-                return;
-            }
-
-            console.log(`USUARIO: 
-            Id: ${usuario.id}
-            Nome: ${usuario.nome}
-            Telefone: ${telefone.ddd} ${telefone.numero}
-            Endereço: ${endereco.logradouro}, ${endereco.numero} ${endereco.complemento}, ${endereco.cidade}/${endereco.estado}
-    `)
-        });
+    })
+    .catch(function erro(error) {
+        console.erro("HOUVE UM ERRO! ", error);
     });
-});
+
+// para manipulasr o erro, usamos o  .catch
+
+// const usuario = obterUsuario(function resolverUsuario(error, usuario) {
+//     //null || "" || false === 0 
+//     if (error) {
+//         console.error("DEU ZEBRA! ERRO AO OBTER USUÁRIO", error);
+//         return;
+//     }
+
+//     obterTelefone(usuario.id, function resolverTelefone(erroTelefone, telefone) {
+
+//         if (erroTelefone) {
+//             console.error("DEU ZEBRA! ERRO AO OBTER TELEFONE", erroTelefone);
+//             return;
+//         }
+
+//         obterEndereco(usuario.id, function resolverEndereco(erroEndereco, endereco) {
+//             if (erroEndereco) {
+//                 console.error("DEU ZEBRA! ERRO AO OBTER ENDEREÇO", erroTelefone);
+//                 return;
+//             }
+
+//             console.log(`USUARIO: 
+//             Id: ${usuario.id}
+//             Nome: ${usuario.nome}
+//             Telefone: ${telefone.ddd} ${telefone.numero}
+//             Endereço: ${endereco.logradouro}, ${endereco.numero} ${endereco.complemento}, ${endereco.cidade}/${endereco.estado}
+//     `)
+//         });
+//     });
+// });
