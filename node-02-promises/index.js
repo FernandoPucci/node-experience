@@ -2,6 +2,11 @@
 // 1- obter numero de telefone de usuario a partir do id
 // 2- obter o endereco do usuario
 
+
+// Importamos o Modulo interno do node.js
+const util = require('util')
+const obterEnderecoAsync = util.promisify(obterEndereco)
+
 // IMPLEMENTAÇÃO POR PROMISES
 
 function obterUsuario() {
@@ -30,18 +35,16 @@ function obterTelefone(idUsuario) {
     });
 }
 
-function obterEndereco(idUsuario) {
-    return new Promise(function resolverPromise(resolve, reject) {
-        setTimeout(function () {
-            return resolve( {
-                logradouro: 'Rua XPTO',
-                numero: '35',
-                complemento: 'apartamento',
-                cidade: 'São Paulo',
-                estado: 'SP'
-            })
-        }, 1000)
-    });
+function obterEndereco(idUsuario, callback) {
+    setTimeout(function () {
+        return callback(null, {
+            logradouro: 'Rua XPTO',
+            numero: '35',
+            complemento: 'apartamento',
+            cidade: 'São Paulo',
+            estado: 'SP'
+        })
+    }, 1000)
 }
 
 //carrega usuario
@@ -66,20 +69,21 @@ usuarioPromise
                 }
             })
     })
-    .then(function (usuario) {
-        return obterEndereco((usuario.id))
-            .then(function resolverEndereco(endereco) {
-                return {
-                    usuario,
-                    endereco: {
-                        logradouro: endereco.logradouro,
-                        numero: endereco.numero,
-                        complemento: endereco.complemento,
-                        cidade: endereco.cidade,
-                        estado: endereco.estado
-                    }
+    .then(function (usuarioTelefone) {
+        const endereco = obterEnderecoAsync(usuarioTelefone.usuario.id);
+        return endereco.then(function resolverEndereco(endereco) {
+            return {
+                usuario: usuarioTelefone.usuario,
+                telefone: usuarioTelefone.telefone,
+                endereco: {
+                    logradouro: endereco.logradouro,
+                    numero: endereco.numero,
+                    complemento: endereco.complemento,
+                    cidade: endereco.cidade,
+                    estado: endereco.estado
                 }
-            })
+            }
+        })
     })
     .then(function (resultado) {
         console.log('resultado', resultado);
