@@ -52,7 +52,7 @@ const usuarioPromise = obterUsuario()
 
 // para manipular o sucesso usamos a função .then
 // para manipular erros, usamos o .catch
-// função usuario -> telefone -> telefone
+// função usuario -> telefone -> endereco
 usuarioPromise
     .then(function (usuario) {
         return obterTelefone(usuario.id)
