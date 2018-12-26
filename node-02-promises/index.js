@@ -86,7 +86,13 @@ usuarioPromise
         })
     })
     .then(function (resultado) {
-        console.log('resultado', resultado);
+        console.log('resultado', `
+        ID: ${resultado.usuario.id}
+        Nome: ${resultado.usuario.nome}
+        Endereço: ${resultado.endereco.logradouro}, ${resultado.endereco.numero}
+        Complemento: ${resultado.endereco.complemento}
+        Cidade: ${resultado.endereco.cidade}/${resultado.endereco.estado}
+        `);
     })
     .catch(function erro(error) {
         console.erro("HOUVE UM ERRO! ", error);
