@@ -92,6 +92,7 @@ usuarioPromise
         Endereço: ${resultado.endereco.logradouro}, ${resultado.endereco.numero}
         Complemento: ${resultado.endereco.complemento}
         Cidade: ${resultado.endereco.cidade}/${resultado.endereco.estado}
+        Telefone: (${resultado.telefone.ddd})${resultado.telefone.numero}
         `);
     })
     .catch(function erro(error) {
